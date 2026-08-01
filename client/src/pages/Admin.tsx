@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api';
 import { useAuth } from '../context/AuthContext';
 import type { Appointment } from '../types';
@@ -17,7 +17,7 @@ export default function Admin() {
   const [filterDate, setFilterDate] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
 
-  const load = () => {
+  const load = useCallback(() => {
     setLoading(true);
     api
       .getAppointments({
@@ -27,11 +27,11 @@ export default function Admin() {
       .then(setAppointments)
       .catch(console.error)
       .finally(() => setLoading(false));
-  };
+  }, [filterDate, filterStatus]);
 
   useEffect(() => {
     load();
-  }, [filterDate, filterStatus]);
+  }, [load]);
 
   const updateStatus = async (id: number, status: string) => {
     await api.updateAppointment(id, { status } as Partial<Appointment>);
@@ -41,6 +41,12 @@ export default function Admin() {
   const cancel = async (id: number) => {
     if (!confirm('¿Cancelar esta cita?')) return;
     await api.cancelAppointment(id);
+    load();
+  };
+
+  const clearAll = async () => {
+    if (!confirm('¿Eliminar TODAS las citas? Esta acción no se puede deshacer.')) return;
+    await api.clearAllAppointments();
     load();
   };
 
@@ -56,6 +62,9 @@ export default function Admin() {
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <button className="btn btn-secondary btn-sm" onClick={load}>
             🔄 Actualizar
+          </button>
+          <button className="btn btn-danger btn-sm" onClick={clearAll}>
+            🗑 Limpiar citas
           </button>
           <button className="btn btn-secondary btn-sm" onClick={logout}>
             Cerrar sesión

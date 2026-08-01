@@ -57,4 +57,6 @@ export const api = {
     }),
   cancelAppointment: (id: number) =>
     request<{ message: string }>(`/appointments/${id}`, { method: 'DELETE' }),
+  clearAllAppointments: () =>
+    request<{ message: string }>('/appointments/clear-all', { method: 'POST' }),
 };
