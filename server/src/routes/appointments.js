@@ -25,6 +25,11 @@ router.get('/slots', (req, res) => {
   res.json({ date, available, all: TIME_SLOTS });
 });
 
+router.post('/clear-all', requireAuth, (_req, res) => {
+  db.prepare('DELETE FROM appointments').run();
+  res.json({ message: 'Todas las citas eliminadas' });
+});
+
 router.get('/', requireAuth, (req, res) => {
   const { date, status } = req.query;
   let query = `
