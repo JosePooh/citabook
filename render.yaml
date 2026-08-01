@@ -2,6 +2,7 @@ services:
   - type: web
     name: citabook-api
     runtime: node
+    nodeVersion: "20" 
     rootDir: server
     buildCommand: npm install
     startCommand: npm start

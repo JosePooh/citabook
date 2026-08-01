@@ -8,7 +8,7 @@
     "stop": "powershell -NoProfile -Command \"$p = (Get-NetTCPConnection -LocalPort 4001 -ErrorAction SilentlyContinue).OwningProcess | Select-Object -Unique; if ($p) { $p | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue; Write-Host ('Proceso ' + $_ + ' terminado') } } else { Write-Host 'Puerto 4001 libre' }\""
   },
   "engines": {
-    "node": ">=18"
+    "node": "20.x"
   },
   "dependencies": {
     "better-sqlite3": "^11.7.0",
